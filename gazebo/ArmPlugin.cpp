@@ -66,7 +66,7 @@
 #define ANIMATION_STEPS 1000
 
 // Set Debug Mode
-#define DEBUG true
+#define DEBUG false
 
 // Lock base rotation DOF (Add dof in header file if off)
 #define LOCKBASE true
@@ -257,22 +257,23 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 
 	
 		/*
-		/ TODO - Check if there is collision between the arm and object, then issue learning reward
-		/
-		*/
-		
-		/*
-		
+		 *Check if there is collision between the arm and object, then issue learning reward
+		 */
+		bool collisionCheck = false;
+		if ((strcmp(contacts->contact(i).collision1().c_str(), COLLISION_ITEM) == 0) &&
+				(strcmp(contacts->contact(i).collision2().c_str(), COLLISION_POINT) == 0)) {
+			collisionCheck = true;
+		}
+
 		if (collisionCheck)
 		{
-			rewardHistory = None;
+			rewardHistory = REWARD_WIN;
 
-			newReward  = None;
-			endEpisode = None;
+			newReward  = true;
+			endEpisode = true;
 
 			return;
 		}
-		*/
 		
 	}
 }
