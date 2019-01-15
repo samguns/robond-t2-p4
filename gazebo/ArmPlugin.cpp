@@ -137,7 +137,7 @@ void ArmPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/)
 	 * Subscribe to camera topic
 	 */
 	
-	cameraSub = cameraNode->Subscribe("/gazebo/arm_world/camera/link/camera/image", onCameraMsg, this);
+	cameraSub = cameraNode->Subscribe("/gazebo/arm_world/camera/link/camera/image", &ArmPlugin::onCameraMsg, this);
 
 	// Create our node for collision detection
 	collisionNode->Init();
@@ -146,7 +146,7 @@ void ArmPlugin::Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/)
 	 * Subscribe to prop collision topic
 	 */
 	
-	collisionSub = collisionNode->Subscribe("/gazebo/arm_world/tube/tube_link/my_contact", onCollisionMsg, this);
+	collisionSub = collisionNode->Subscribe("/gazebo/arm_world/tube/tube_link/my_contact", &ArmPlugin::onCollisionMsg, this);
 
 	// Listen to the update event. This event is broadcast every simulation iteration.
 	this->updateConnection = event::Events::ConnectWorldUpdateBegin(boost::bind(&ArmPlugin::OnUpdate, this, _1));
@@ -579,8 +579,6 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 		 * set appropriate Reward for robot hitting the ground.
 		 */
 		bool checkGroundContact = (gripBBox.min.z <= groundContact || gripBBox.max.z <= groundContact);
-		
-		
 		if (checkGroundContact){
 			if(DEBUG){printf("GROUND CONTACT, EOE\n");}
 
@@ -588,7 +586,6 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 			newReward     = true;
 			endEpisode    = true;
 		}
-		*/
 		
 		/*
 		 * Issue an interim reward based on the distance to the object
