@@ -61,6 +61,7 @@
 #define COLLISION_FILTER "ground_plane::link::collision"
 #define COLLISION_ITEM   "tube::tube_link::tube_collision"
 #define COLLISION_POINT  "arm::gripperbase::gripper_link"
+#define COLLISION_ARM	 "arm::link2::collision2"
 
 // Animation Steps
 #define ANIMATION_STEPS 1000
