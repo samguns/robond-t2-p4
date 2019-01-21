@@ -37,8 +37,8 @@
 
 #define INPUT_WIDTH   64
 #define INPUT_HEIGHT  64
-#define OPTIMIZER "Adam"
-#define LEARNING_RATE 0.001f
+#define OPTIMIZER "RMSprop"
+#define LEARNING_RATE 0.01f
 #define REPLAY_MEMORY 20000
 #define BATCH_SIZE 128
 #define USE_LSTM true
@@ -49,8 +49,8 @@
 /
 */
 
-#define REWARD_WIN  100.0f
-#define REWARD_LOSS -100.0f
+#define REWARD_WIN  1.0f
+#define REWARD_LOSS -1.0f
 
 // Define Object Names
 #define WORLD_NAME "arm_world"
@@ -67,7 +67,7 @@
 #define ANIMATION_STEPS 1000
 
 // Set Debug Mode
-#define DEBUG true
+#define DEBUG false
 
 // Lock base rotation DOF (Add dof in header file if off)
 #define LOCKBASE true
@@ -268,7 +268,7 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 
 		if (collisionCheck)
 		{
-			rewardHistory = REWARD_WIN;
+			rewardHistory = REWARD_WIN * 100.0f;
 
 			newReward  = true;
 			endEpisode = true;
@@ -584,7 +584,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 		if (checkGroundContact){
 			if(DEBUG){printf("GROUND CONTACT, EOE\n");}
 
-			rewardHistory = REWARD_LOSS;
+			rewardHistory = REWARD_LOSS * 10.0f;
 			newReward     = true;
 			endEpisode    = true;
 		}
