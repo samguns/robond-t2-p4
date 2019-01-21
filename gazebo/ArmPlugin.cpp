@@ -49,7 +49,7 @@
 /
 */
 
-#define REWARD_WIN  1.0f
+#define REWARD_WIN  10.0f
 #define REWARD_LOSS -1.0f
 
 // Define Object Names
@@ -268,14 +268,20 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 
 		if (collisionCheck)
 		{
-			rewardHistory = REWARD_WIN * 100.0f;
+			rewardHistory = REWARD_WIN;
 
 			newReward  = true;
 			endEpisode = true;
 
 			return;
 		}
-		
+		else
+        {
+		  rewardHistory = REWARD_LOSS;
+		  newReward = true;
+		  endEpisode = true;
+		  return;
+        }
 	}
 }
 
@@ -584,7 +590,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 		if (checkGroundContact){
 			if(DEBUG){printf("GROUND CONTACT, EOE\n");}
 
-			rewardHistory = REWARD_LOSS * 10.0f;
+			rewardHistory = REWARD_LOSS;
 			newReward     = true;
 			endEpisode    = true;
 		}
@@ -607,7 +613,7 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 
 				// compute the smoothed moving average of the delta of the distance to the goal
 				float alpha=0.3;
-				avgGoalDelta  = (avgGoalDelta * alpha) + (distDelta * (1 - alpha));;
+				avgGoalDelta  = (avgGoalDelta * alpha) + (distDelta * (1 - alpha));
 				rewardHistory = avgGoalDelta;
 				newReward     = true;
 				printf("distDelta %f rewardHistory %f\n", distDelta, rewardHistory);
