@@ -258,21 +258,29 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 
 	
 		/*
-		 *Check if there is collision between the arm and object, then issue learning reward
+		 *Check if there is collision between the gripper and tube object, then issue learning reward
 		 */
 		bool collisionCheck = false;
+#if GRIPPER_TOUCH
 		if ((strcmp(contacts->contact(i).collision1().c_str(), COLLISION_ITEM) == 0) &&
 				(strcmp(contacts->contact(i).collision2().c_str(), COLLISION_POINT) == 0)) {
 			collisionCheck = true;
 		}
-
+#else
+		/*
+		 *Check if there is collision between the arm and tube object, then issue learning reward
+		 */
+		if ((strcmp(contacts->contact(i).collision1().c_str(), COLLISION_ITEM) == 0) &&
+				(strcmp(contacts->contact(i).collision2().c_str(), COLLISION_ARM) == 0)) {
+			collisionCheck = true;
+		}
+#endif
 		if (collisionCheck)
 		{
 			rewardHistory = REWARD_WIN;
 
 			newReward  = true;
 			endEpisode = true;
-
 			return;
 		}
 		else
@@ -604,7 +612,6 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 			const float distGoal = BoxDistance(gripBBox, propBBox); // compute the reward from distance to the goal
 
 			if(DEBUG){printf("distance('%s', '%s') = %f\n", gripper->GetName().c_str(), prop->model->GetName().c_str(), distGoal);}
-          printf("distance('%s', '%s') = %f\n", gripper->GetName().c_str(), prop->model->GetName().c_str(), distGoal);
 
 			
 			if( episodeFrames > 1 )
@@ -616,7 +623,6 @@ void ArmPlugin::OnUpdate(const common::UpdateInfo& updateInfo)
 				avgGoalDelta  = (avgGoalDelta * alpha) + (distDelta * (1 - alpha));
 				rewardHistory = avgGoalDelta;
 				newReward     = true;
-				printf("distDelta %f rewardHistory %f\n", distDelta, rewardHistory);
 			}
 
 			lastGoalDistance = distGoal;
