@@ -37,8 +37,8 @@
 
 #define INPUT_WIDTH   128
 #define INPUT_HEIGHT  128
-#define OPTIMIZER "Adam"
-#define LEARNING_RATE 0.001f
+#define OPTIMIZER "RMSprop"
+#define LEARNING_RATE 0.05f
 #define REPLAY_MEMORY 20000
 #define BATCH_SIZE 512
 #define USE_LSTM true
@@ -282,13 +282,6 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 			endEpisode = true;
 			return;
 		}
-		else
-        {
-		  rewardHistory = REWARD_LOSS;
-		  newReward = true;
-		  endEpisode = true;
-		  return;
-        }
 	}
 }
 
