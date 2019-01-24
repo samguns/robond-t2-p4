@@ -71,7 +71,7 @@
 // Lock base rotation DOF (Add dof in header file if off)
 #define LOCKBASE true
 
-#define GRIPPER_TOUCH 0
+#define GRIPPER_TOUCH 1
 
 namespace gazebo
 {
