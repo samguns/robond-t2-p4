@@ -35,22 +35,22 @@
 /
 */
 
-#define INPUT_WIDTH   64
-#define INPUT_HEIGHT  64
+#define INPUT_WIDTH   128
+#define INPUT_HEIGHT  128
 #define OPTIMIZER "Adam"
 #define LEARNING_RATE 0.001f
-#define REPLAY_MEMORY 10000
-#define BATCH_SIZE 128
+#define REPLAY_MEMORY 20000
+#define BATCH_SIZE 512
 #define USE_LSTM true
-#define LSTM_SIZE 256
+#define LSTM_SIZE 512
 
 /*
 / Define Reward Parameters
 /
 */
 
-#define REWARD_WIN  5.0f
-#define REWARD_LOSS -5.0f
+#define REWARD_WIN  1.0f
+#define REWARD_LOSS -1.0f
 
 // Define Object Names
 #define WORLD_NAME "arm_world"
@@ -61,7 +61,6 @@
 #define COLLISION_FILTER "ground_plane::link::collision"
 #define COLLISION_ITEM   "tube::tube_link::tube_collision"
 #define COLLISION_POINT  "arm::gripperbase::gripper_link"
-#define COLLISION_ARM	 "arm::link2::collision2"
 
 // Animation Steps
 #define ANIMATION_STEPS 1000
@@ -72,6 +71,7 @@
 // Lock base rotation DOF (Add dof in header file if off)
 #define LOCKBASE true
 
+#define GRIPPER_TOUCH 0
 
 namespace gazebo
 {
@@ -261,7 +261,7 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 		 *Check if there is collision between the gripper and tube object, then issue learning reward
 		 */
 		bool collisionCheck = false;
-#if GRIPPER_TOUCH
+#if (GRIPPER_TOUCH == 1)
 		if ((strcmp(contacts->contact(i).collision1().c_str(), COLLISION_ITEM) == 0) &&
 				(strcmp(contacts->contact(i).collision2().c_str(), COLLISION_POINT) == 0)) {
 			collisionCheck = true;
@@ -270,8 +270,7 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 		/*
 		 *Check if there is collision between the arm and tube object, then issue learning reward
 		 */
-		if ((strcmp(contacts->contact(i).collision1().c_str(), COLLISION_ITEM) == 0) &&
-				(strcmp(contacts->contact(i).collision2().c_str(), COLLISION_ARM) == 0)) {
+		if (strcmp(contacts->contact(i).collision1().c_str(), COLLISION_ITEM) == 0) {
 			collisionCheck = true;
 		}
 #endif
