@@ -37,8 +37,8 @@
 
 #define INPUT_WIDTH   128
 #define INPUT_HEIGHT  128
-#define OPTIMIZER "RMSprop"
-#define LEARNING_RATE 0.05f
+#define OPTIMIZER "Adam"
+#define LEARNING_RATE 0.001f
 #define REPLAY_MEMORY 20000
 #define BATCH_SIZE 512
 #define USE_LSTM true
@@ -253,7 +253,7 @@ void ArmPlugin::onCollisionMsg(ConstContactsPtr &contacts)
 		if( strcmp(contacts->contact(i).collision2().c_str(), COLLISION_FILTER) == 0 )
 			continue;
 
-		if(DEBUG){std::cout << "Collision between[" << contacts->contact(i).collision1()
+		if(1){std::cout << "Collision between[" << contacts->contact(i).collision1()
 			     << "] and [" << contacts->contact(i).collision2() << "]\n";}
 
 	
